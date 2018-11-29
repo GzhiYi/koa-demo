@@ -74,7 +74,7 @@ const getCode = async ctx => {
   })
   ctx.set('Content-Type', 'application/octet-stream')
   ctx.set('Content-Disposition', 'application/octet-stream')
-  ctx.body = code.toString('base64')
+  ctx.body = code
 }
 
 const middlewares = compose([
