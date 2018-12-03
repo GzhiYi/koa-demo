@@ -8,12 +8,12 @@ const cors = require('koa-cors')
 const rp = require('request-promise') 
 const { Pool } = require('pg')
 const app = new Koa()
-const database = require('./config')
+const config = require('./config')
 app.use(bodyParser())
 app.use(cors())
 app.use(serve(path.join(__dirname, '/public')));
 
-const client = new Pool(database.database)
+const client = new Pool(config.database)
 function checkProperty(obj, key) {
   return obj.hasOwnProperty(key)
 }
