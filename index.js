@@ -8,7 +8,8 @@ const cors = require('koa-cors')
 const rp = require('request-promise') 
 const { Pool } = require('pg')
 const app = new Koa()
-const database = require('./config')
+import database from './config'
+console.log('database', database)
 
 app.use(bodyParser())
 app.use(cors())
