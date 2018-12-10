@@ -9,6 +9,7 @@ const rp = require('request-promise')
 const { Pool } = require('pg')
 const app = new Koa()
 const config = require('./config')
+const fs = require('fs')
 app.use(bodyParser())
 app.use(cors())
 app.use(serve(path.join(__dirname, '/public')));
@@ -65,21 +66,26 @@ const getCode = async ctx => {
     path: `${seq.path}?${seq.params}`,
     width: seq.width
   }
-  const code = await rp({
+  const code = rp({
     uri: `https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=${token}`,
     method: 'post',
     body: data,
     json: true
   })
-  ctx.set('Content-Type', 'application/octet-stream')
-  ctx.set('Content-Disposition', 'application/octet-stream')
-  ctx.body = code
+  code.pipe(fs.createWriteStream('qrcode.png'))
+  ctx.status = 200
 }
 
+const getCodeFinal = async ctx => {
+  const stream = fs.createReadStream('qrcode.png')
+  ctx.set("Content-Disposition", "attachment;filename=qrcode.png")
+  ctx.body = stream
+}
 const middlewares = compose([
   route.post('/addMp', addMp),
   route.post('/getCode', getCode),
-  route.get('/mpList', getMpList)
+  route.get('/mpList', getMpList),
+  route.get('/getCodeFinal', getCodeFinal)
 ])
 app.use(middlewares)
 app.listen(4000)
