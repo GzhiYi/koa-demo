@@ -68,7 +68,7 @@ const getCode = async ctx => {
     width: seq.width
   }
   const code = rp({
-    uri: `https://api.weixin.qq.com/cgi-bin/wxaapp/createwxaqrcode?access_token=${token}`,
+    uri: `https://api.weixin.qq.com/wxa/getwxacode?access_token=${token}`,
     method: 'post',
     body: data,
     json: true
