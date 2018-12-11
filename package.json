@@ -14,6 +14,7 @@
     "koa-compose": "^4.1.0",
     "koa-cors": "^0.0.16",
     "koa-route": "^3.2.0",
+    "koa-send": "^5.0.0",
     "koa-static": "^5.0.0",
     "pg": "^7.6.1",
     "request": "^2.88.0",

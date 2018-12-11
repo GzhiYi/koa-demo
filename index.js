@@ -10,6 +10,7 @@ const { Pool } = require('pg')
 const app = new Koa()
 const config = require('./config')
 const fs = require('fs')
+const send = require('koa-send')
 app.use(bodyParser())
 app.use(cors())
 app.use(serve(path.join(__dirname, '/public')));
@@ -77,15 +78,15 @@ const getCode = async ctx => {
 }
 
 const getCodeFinal = async ctx => {
-  const stream = fs.createReadStream('qrcode.png')
   ctx.set("Content-Disposition", "attachment;filename=qrcode.png")
-  ctx.body = stream
+  ctx.set("Content-Type", "application/octet-stream")
+  await send(ctx, 'qrcode.png')
 }
 const middlewares = compose([
   route.post('/addMp', addMp),
   route.post('/getCode', getCode),
   route.get('/mpList', getMpList),
-  route.get('/getCodeFinal', getCodeFinal)
+  route.get('/download/:name', getCodeFinal)
 ])
 app.use(middlewares)
 app.listen(4000)
