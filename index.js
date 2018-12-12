@@ -73,13 +73,12 @@ const getCode = async ctx => {
     body: data,
     json: true
   })
-  code.pipe(fs.createWriteStream('qrcode.png'))
+  await code.pipe(fs.createWriteStream('qrcode.png'))
   ctx.status = 200
 }
 
 const getCodeFinal = async ctx => {
-  ctx.set("Content-Disposition", "attachment;filename=qrcode.png")
-  ctx.set("Content-Type", "application/octet-stream")
+  ctx.attachment('qrcode.png')
   await send(ctx, 'qrcode.png')
 }
 const middlewares = compose([
