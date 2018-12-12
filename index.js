@@ -10,6 +10,7 @@ const { Pool } = require('pg')
 const app = new Koa()
 const config = require('./config')
 const fs = require('fs')
+const request = require('request')
 const send = require('koa-send')
 app.use(bodyParser())
 app.use(cors())
@@ -56,6 +57,7 @@ const getMpList = async ctx => {
     data: mpList.rows
   }
 }
+let localStream = null
 // 获取二维码
 const getCode = async ctx => {
   const seq = ctx.request.body
@@ -67,14 +69,22 @@ const getCode = async ctx => {
     path: `${seq.path}?${seq.params}`,
     width: seq.width
   }
-  const code = rp({
+  const writeS = fs.createWriteStream('qrcode.png')
+  await request({
     uri: `https://api.weixin.qq.com/wxa/getwxacode?access_token=${token}`,
     method: 'post',
     body: data,
     json: true
+  }).pipe(writeS)
+  
+  ctx.body = await new Promise((resolve, reject) => {
+    writeS.on('finish', function () {
+      resolve({
+        code: 1
+      })
+    })
   })
-  await code.pipe(fs.createWriteStream('qrcode.png'))
-  ctx.status = 200
+  console.log('end')
 }
 
 const getCodeFinal = async ctx => {
