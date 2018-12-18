@@ -67,7 +67,9 @@ const getCode = async ctx => {
   const token = JSON.parse(result).access_token
   const data = {
     path: `${seq.path}?${seq.params}`,
-    width: seq.width
+    width: seq.width,
+    auto_color: seq.autoLineColor || false,
+    is_hyaline: seq.isHyaline || false
   }
   const writeS = fs.createWriteStream('qrcode.png')
   await request({
