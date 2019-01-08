@@ -61,7 +61,7 @@ let localStream = null
 // 获取二维码
 const getCode = async ctx => {
   const seq = ctx.request.body
-  const qList = await client.query(`select * from mpqrcode where app_id = $1`, [seq.defaultValue])
+  const qList = await client.query(`select * from mpqrcode where app_id = $1`, [seq.appId])
   const targetMp = qList.rows[0]
   const result = await rp(`https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${targetMp.app_id}&secret=${targetMp.secret_key}`)
   const token = JSON.parse(result).access_token
